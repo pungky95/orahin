@@ -1,0 +1,73 @@
+image: registry.gitlab.com/pungkyorahin95/orahin-dashboard:latest
+
+services:
+  - mysql:5.7
+
+variables:
+  MYSQL_DATABASE: orahin_test
+  MYSQL_ROOT_PASSWORD: chivasdakota
+  DB_HOST: mysql
+  DB_USERNAME: root
+
+stages:
+  - test
+  - deploy
+
+test:
+  stage: test
+  script:
+    - mkdir credentials
+    - echo $FIREBASE_KEY > ./credentials/orahin-staging-f3c60-firebase-adminsdk-tlk7u-0911f4b685.json
+    - echo -e "APP_NAME=$APP_NAME\n
+      APP_ENV=$APP_ENV_STAGING\n
+      APP_KEY=$APP_KEY\n
+      APP_DEBUG=$APP_DEBUG_STAGING\n
+      APP_URL=$APP_URL\n
+      DB_CONNECTION=$DB_CONNECTION\n
+      DB_HOST=$DB_HOST\n
+      DB_PORT=$DB_PORT\n
+      DB_DATABASE=$DB_DATABASE\n
+      DB_USERNAME=$DB_USERNAME\n
+      DB_PASSWORD=$DB_PASSWORD\n
+      BROADCAST_DRIVER=$BROADCAST_DRIVER\n
+      CACHE_DRIVER=$CACHE_DRIVER\n
+      QUEUE_CONNECTION=$QUEUE_CONNECTION\n
+      SESSION_DRIVER=$SESSION_DRIVER\n
+      SESSION_LIFETIME=$SESSION_LIFETIME\n
+      MAIL_DRIVER=$MAIL_DRIVER\n
+      MAIL_HOST=$MAIL_HOST\n
+      MAIL_PORT=$MAIL_PORT\n
+      MAIL_USERNAME=$MAIL_USERNAME\n
+      MAIL_PASSWORD=$MAIL_PASSWORD\n
+      MAIL_ENCRYPTION=$MAIL_ENCRYPTION\n
+      MAIL_FROM_ADDRESS=$MAIL_FROM_ADDRESS\n
+      MAIL_FROM_NAME=$MAIL_FROM_NAME\n
+      DO_SPACES_KEY=$DO_SPACES_KEY\n
+      DO_SPACES_SECRET=$DO_SPACES_SECRET\n
+      DO_SPACES_ENDPOINT=$DO_SPACES_ENDPOINT\n
+      DO_SPACES_REGION=$DO_SPACES_REGION\n
+      DO_SPACES_BUCKET=$DO_SPACES_BUCKET\n
+      FIREBASE_CREDENTIALS=$FIREBASE_CREDENTIALS" > ./.env
+    - composer install
+    - php artisan key:generate
+    - php artisan migrate --seed
+    - php artisan cache:clear
+    - php artisan config:clear
+    - vendor/bin/phpunit
+
+deploy:
+  stage: deploy
+  script:
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "$SSH_PRIVATE_KEY")
+    - mkdir -p ~/.ssh
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+
+    - ~/.composer/vendor/bin/envoy run deploy --commit="$CI_COMMIT_SHA"
+  environment:
+    name: staging
+    url: https://staging.dashboard.orahin.com
+  when: on_success
+  only:
+    - master

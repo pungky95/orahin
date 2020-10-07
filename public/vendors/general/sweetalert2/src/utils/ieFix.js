@@ -1,0 +1,38 @@
+/*
+ *  Copyright (c) 2019. Orahin
+ *  @author Pungky Kristianto
+ *  @url https://orahin.id
+ *  @date 12/15/19, 3:35 PM
+ */
+
+import * as dom from './dom/index.js'
+
+// https://stackoverflow.com/a/21825207
+const isIE11 = () => !!window.MSInputMethodContext && !!document.documentMode
+
+// Fix IE11 centering sweetalert2/issues/933
+/* istanbul ignore next */
+const fixVerticalPositionIE = () => {
+  const container = dom.getContainer()
+  const popup = dom.getPopup()
+
+  container.style.removeProperty('align-items')
+  if (popup.offsetTop < 0 ) {
+    container.style.alignItems = 'flex-start'
+  }
+}
+
+/* istanbul ignore next */
+export const IEfix = () => {
+  if (typeof window !== 'undefined' && isIE11()) {
+    fixVerticalPositionIE()
+    window.addEventListener('resize', fixVerticalPositionIE)
+  }
+}
+
+/* istanbul ignore next */
+export const undoIEfix = () => {
+  if (typeof window !== 'undefined' && isIE11()) {
+    window.removeEventListener('resize', fixVerticalPositionIE)
+  }
+}

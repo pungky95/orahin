@@ -1,0 +1,23 @@
+/*
+ *  Copyright (c) 2019. Orahin
+ *  @author Pungky Kristianto
+ *  @url https://orahin.id
+ *  @date 12/15/19, 3:35 PM
+ */
+
+@keyframes rotateOut {
+  from {
+    transform-origin: center;
+    opacity: 1;
+  }
+
+  to {
+    transform-origin: center;
+    transform: rotate3d(0, 0, 1, 200deg);
+    opacity: 0;
+  }
+}
+
+.rotateOut {
+  animation-name: rotateOut;
+}

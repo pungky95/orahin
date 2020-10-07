@@ -1,0 +1,21 @@
+/*
+ *  Copyright (c) 2019. Orahin
+ *  @author Pungky Kristianto
+ *  @url https://orahin.id
+ *  @date 12/15/19, 3:35 PM
+ */
+
+// Alerts
+
+.alert-variant(@background; @border; @text-color) {
+  background-color: @background;
+  border-color: @border;
+  color: @text-color;
+
+  hr {
+    border-top-color: darken(@border, 5%);
+  }
+  .alert-link {
+    color: darken(@text-color, 10%);
+  }
+}

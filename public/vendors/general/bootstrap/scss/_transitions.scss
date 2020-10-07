@@ -1,0 +1,27 @@
+/*!
+ *  Copyright (c) 2019. Orahin
+ *  @author Pungky Kristianto
+ *  @url https://orahin.id
+ *  @date 12/15/19, 3:34 PM
+ */
+
+.fade {
+  @include transition($transition-fade);
+
+  &:not(.show) {
+    opacity: 0;
+  }
+}
+
+.collapse {
+  &:not(.show) {
+    display: none;
+  }
+}
+
+.collapsing {
+  position: relative;
+  height: 0;
+  overflow: hidden;
+  @include transition($transition-collapse);
+}

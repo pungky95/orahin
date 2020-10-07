@@ -1,0 +1,28 @@
+/*!
+ *  Copyright (c) 2019. Orahin
+ *  @author Pungky Kristianto
+ *  @url https://orahin.id
+ *  @date 12/15/19, 3:35 PM
+ */
+
+.inner {
+  width: 700px;
+}
+nav {
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+nav ul {
+  list-style: none;
+}
+nav li {
+  display: inline;
+}
+nav li.active {
+  font-weight: bold;
+}
+nav a {
+  display: inline-block;
+  padding: 2px 5px;
+}

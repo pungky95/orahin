@@ -1,0 +1,16 @@
+/*
+ *  Copyright (c) 2019. Orahin
+ *  @author Pungky Kristianto
+ *  @url https://orahin.id
+ *  @date 12/15/19, 3:35 PM
+ */
+
+// Contextual backgrounds
+
+.bg-variant(@color) {
+  background-color: @color;
+  a&:hover,
+  a&:focus {
+    background-color: darken(@color, 10%);
+  }
+}
